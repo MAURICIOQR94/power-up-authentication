@@ -1,8 +1,6 @@
-package co.com.pragma.r2dbc;
+package co.com.pragma.r2dbc.user;
 
 import co.com.pragma.model.user.User;
-import co.com.pragma.r2dbc.user.IUserRepository;
-import co.com.pragma.r2dbc.user.UserRepositoryAdapter;
 import co.com.pragma.r2dbc.user.entity.UserEntity;
 import co.com.pragma.r2dbc.user.entity.UserMapper;
 import org.junit.jupiter.api.BeforeEach;

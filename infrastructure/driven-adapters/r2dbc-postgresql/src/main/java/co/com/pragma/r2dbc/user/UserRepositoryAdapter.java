@@ -1,7 +1,8 @@
 package co.com.pragma.r2dbc.user;
 
-import co.com.pragma.model.user.gateways.UserRepository;
+import co.com.pragma.common.exception.TechnicalException;
 import co.com.pragma.model.user.User;
+import co.com.pragma.model.user.gateways.UserRepository;
 import co.com.pragma.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.pragma.r2dbc.user.entity.UserEntity;
 import co.com.pragma.r2dbc.user.entity.UserMapper;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+
+import static co.com.pragma.common.enums.TechnicalExceptionMessage.USER_SAVE;
 
 @Repository
 public class UserRepositoryAdapter extends ReactiveAdapterOperations<User, UserEntity, UUID, IUserRepository> implements UserRepository {
@@ -26,11 +29,12 @@ public class UserRepositoryAdapter extends ReactiveAdapterOperations<User, UserE
         return Mono.just(user)
                 .map(u -> {
                     u.setUserId(UUID.randomUUID());
-                            return u;
+                    return u;
                 })
                 .map(this::toData)
                 .flatMap(r2dbcEntityTemplate::insert)
-                .map(this::toEntity);
+                .map(this::toEntity)
+                .onErrorMap(e -> new TechnicalException(e, USER_SAVE));
     }
 
     @Override
