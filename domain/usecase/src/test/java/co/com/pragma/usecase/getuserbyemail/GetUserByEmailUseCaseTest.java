@@ -1,6 +1,7 @@
 package co.com.pragma.usecase.getuserbyemail;
 
 import co.com.pragma.model.common.exception.BusinessException;
+import co.com.pragma.model.role.gateways.RoleRepository;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +19,14 @@ class GetUserByEmailUseCaseTest {
 
     private User user;
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
     private GetUserByEmailUseCase getUserByEmailUseCase;
 
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
-        getUserByEmailUseCase = new GetUserByEmailUseCase(userRepository);
+        roleRepository = mock(RoleRepository.class);
+        getUserByEmailUseCase = new GetUserByEmailUseCase(userRepository, roleRepository);
 
         user = User.builder()
                 .userId(UUID.randomUUID())

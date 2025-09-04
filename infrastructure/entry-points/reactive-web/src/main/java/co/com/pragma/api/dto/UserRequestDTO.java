@@ -37,6 +37,14 @@ public class UserRequestDTO {
     @Size(max = 150, message = "Email must not exceed 150 characters")
     String email;
 
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    String password;
+
+    @Size(min = 6, max = 60)
+    @NotBlank(message = "Document number is required")
+    String documentNumber;
+
     @NotNull(message = "Base salary is required")
     @DecimalMin(value = "0.0", inclusive = true, message = "Base salary must be greater than or equal to 0")
     @DecimalMax(value = "15000000.0", inclusive = true, message = "Base salary must not exceed 15,000,000")

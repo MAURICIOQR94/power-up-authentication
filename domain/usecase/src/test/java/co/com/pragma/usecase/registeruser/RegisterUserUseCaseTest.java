@@ -1,5 +1,7 @@
 package co.com.pragma.usecase.registeruser;
 
+import co.com.pragma.model.role.gateways.RoleRepository;
+import co.com.pragma.model.security.gateways.PasswordService;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,11 +19,16 @@ class RegisterUserUseCaseTest {
 
     private UserRepository userRepository;
     private RegisterUserUseCase registerUserUseCase;
+    private PasswordService passwordService;
+    private RoleRepository roleRepository;
 
     @BeforeEach
     void setUp() {
         userRepository = mock(UserRepository.class);
-        registerUserUseCase = new RegisterUserUseCase(userRepository);
+        passwordService = mock(PasswordService.class);
+        roleRepository = mock(RoleRepository.class);
+
+        registerUserUseCase = new RegisterUserUseCase(passwordService, userRepository, roleRepository);
     }
 
     @Test
@@ -32,6 +39,7 @@ class RegisterUserUseCaseTest {
                 .lastName("Quintero")
                 .birthDate(LocalDate.of(1994,1,30))
                 .email("mauricio@email.com")
+                .password(passwordService.encode("12345"))
                 .baseSalary(new BigDecimal(5000))
                 .build();
 
@@ -54,6 +62,7 @@ class RegisterUserUseCaseTest {
                 .lastName("Trazo")
                 .birthDate(LocalDate.of(1999,1,20))
                 .email("Ana@email.com")
+                .password(passwordService.encode("12345"))
                 .baseSalary(new BigDecimal(5000))
                 .build();
 

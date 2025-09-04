@@ -1,4 +1,4 @@
-package co.com.pragma.r2dbc.user.entity;
+package co.com.pragma.r2dbc.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +38,15 @@ public class UserEntity {
 
     private String email;
 
+    private String password;
+
+    @Column("document_number")
+    private String documentNumber;
+
     @Column("base_salary")
     private BigDecimal baseSalary;
+
+    @Column("id_role")
+    private Long idRole;
 
 }
