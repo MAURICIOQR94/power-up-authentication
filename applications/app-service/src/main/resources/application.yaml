@@ -22,3 +22,19 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
+adapters:
+  postgres:
+    database: ${DATABASE_AUTH}
+    host: "localhost"
+    port: 5432
+    username: ${USERNAME_AUTH}
+    password: ${PASSWORD_AUTH}
+    schema: "public"
+    pool:
+      initial-size: 12
+      max-size: 15
+      max-idle-time: 10
+
+  reactive-web:
+    base-path: "api/v1/usuarios"
