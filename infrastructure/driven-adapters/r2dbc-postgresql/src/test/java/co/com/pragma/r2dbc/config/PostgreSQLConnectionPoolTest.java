@@ -2,13 +2,15 @@ package co.com.pragma.r2dbc.config;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PostgreSQLConnectionPoolTest {
 
     @InjectMocks
@@ -17,10 +19,12 @@ class PostgreSQLConnectionPoolTest {
     @Mock
     private PostgresqlConnectionProperties properties;
 
+    @Mock
+    private PostgreSQLConnectionPoolProperties connectionPoolProperties;
+
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
 
         when(properties.host()).thenReturn("localhost");
         when(properties.port()).thenReturn(5432);
@@ -28,6 +32,10 @@ class PostgreSQLConnectionPoolTest {
         when(properties.schema()).thenReturn("schema");
         when(properties.username()).thenReturn("username");
         when(properties.password()).thenReturn("password");
+
+        when(connectionPoolProperties.initialSize()).thenReturn(5);
+        when(connectionPoolProperties.maxSize()).thenReturn(10);
+        when(connectionPoolProperties.maxIdleTime()).thenReturn(30);
     }
 
     @Test

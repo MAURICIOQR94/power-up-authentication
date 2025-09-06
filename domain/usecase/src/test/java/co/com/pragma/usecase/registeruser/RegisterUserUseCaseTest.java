@@ -1,9 +1,16 @@
 package co.com.pragma.usecase.registeruser;
 
+import co.com.pragma.model.role.Role;
+import co.com.pragma.model.role.gateways.RoleRepository;
+import co.com.pragma.model.security.gateways.PasswordService;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -13,30 +20,51 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class RegisterUserUseCaseTest {
 
+    private static final String ROLE_NAME = "CLIENTE";
+
+    @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordService passwordService;
+
+    @Mock
+    private RoleRepository roleRepository;
+
+    @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
+
+    private User user;
+    private Role role;
 
     @BeforeEach
     void setUp() {
-        userRepository = mock(UserRepository.class);
-        registerUserUseCase = new RegisterUserUseCase(userRepository);
+        role = Role.builder()
+                .id(1L)
+                .name(ROLE_NAME)
+                .description("admin")
+                .build();
+
+        user = User.builder()
+                .userId(UUID.randomUUID())
+                .firstName("Mauricio")
+                .lastName("Quintero")
+                .birthDate(LocalDate.of(1994, 1, 30))
+                .email("mauricio@email.com")
+                .password(("Password12345"))
+                .baseSalary(new BigDecimal(5000))
+                .role(role)
+                .build();
     }
 
     @Test
     void shouldRegisterUserSuccessfully() {
-        User user = User.builder()
-                .userId(UUID.randomUUID())
-                .firstName("Mauricio")
-                .lastName("Quintero")
-                .birthDate(LocalDate.of(1994,1,30))
-                .email("mauricio@email.com")
-                .baseSalary(new BigDecimal(5000))
-                .build();
-
+        when(passwordService.encode("Password12345")).thenReturn("Password12345");
+        when(roleRepository.findByName(ROLE_NAME)).thenReturn(Mono.just(role));
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Mono.empty());
-
         when(userRepository.save(user)).thenReturn(Mono.just(user));
 
         StepVerifier.create(registerUserUseCase.execute(user))
@@ -48,17 +76,9 @@ class RegisterUserUseCaseTest {
 
     @Test
     void shouldFailToRegisterUserIfRepositoryFails() {
-        User user = User.builder()
-                .userId(UUID.randomUUID())
-                .firstName("Ana")
-                .lastName("Trazo")
-                .birthDate(LocalDate.of(1999,1,20))
-                .email("Ana@email.com")
-                .baseSalary(new BigDecimal(5000))
-                .build();
-
+        when(passwordService.encode("Password12345")).thenReturn("Password12345");
+        when(roleRepository.findByName(ROLE_NAME)).thenReturn(Mono.just(role));
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Mono.empty());
-
         when(userRepository.save(user)).thenReturn(Mono.error(new RuntimeException("DB error")));
 
         StepVerifier.create(registerUserUseCase.execute(user))

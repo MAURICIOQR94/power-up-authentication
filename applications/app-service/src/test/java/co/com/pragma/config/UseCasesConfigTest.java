@@ -1,10 +1,16 @@
 package co.com.pragma.config;
 
+import co.com.pragma.model.security.gateways.PasswordService;
+import co.com.pragma.model.security.gateways.JwtUtilService;
+import co.com.pragma.model.role.gateways.RoleRepository;
+import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Bean;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UseCasesConfigTest {
@@ -31,14 +37,23 @@ public class UseCasesConfigTest {
     static class TestConfig {
 
         @Bean
-        public MyUseCase myUseCase() {
-            return new MyUseCase();
+        public UserRepository userRepository() {
+            return Mockito.mock(UserRepository.class);
         }
-    }
 
-    static class MyUseCase {
-        public String execute() {
-            return "MyUseCase Test";
+        @Bean
+        public RoleRepository  roleRepository() {
+            return Mockito.mock(RoleRepository.class);
+        }
+
+        @Bean
+        public PasswordService passwordService() {
+            return Mockito.mock(PasswordService.class);
+        }
+
+        @Bean
+        public JwtUtilService jwtUtilService() {
+            return Mockito.mock(JwtUtilService.class);
         }
     }
 }

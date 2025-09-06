@@ -1,7 +1,7 @@
 package co.com.pragma.r2dbc.helper;
 
-import co.com.pragma.r2dbc.user.IUserRepository;
-import co.com.pragma.r2dbc.user.entity.UserEntity;
+import co.com.pragma.r2dbc.adapter.IUserRepository;
+import co.com.pragma.r2dbc.entity.UserEntity;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import reactor.core.publisher.Mono;

@@ -37,4 +37,8 @@ adapters:
       max-idle-time: 10
 
   reactive-web:
-    base-path: "api/v1/usuarios"
+    base-path: "api/v1"
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

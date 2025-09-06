@@ -11,12 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorDTO {
+public class LoginResponseDTO {
 
-    private String id;
-    private String type;
-    private String title;
-    private String message;
-    private String source;
+    String token;
 
 }

@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 public enum BusinessExceptionMessage {
 
     USER_NOT_FOUND("BE001", "User not found"),
-    EMAIL_ALREADY_EXISTS("BE002", "Email already exists");
+    EMAIL_ALREADY_EXISTS("BE002", "Email already exists"),
+
+    INCORRECT_PASSWORD("BE003", "The password is incorrect"),
+    ROLE_NOT_FOUND("BE004", "Role not found");
 
     private final String code;
     private final String message;

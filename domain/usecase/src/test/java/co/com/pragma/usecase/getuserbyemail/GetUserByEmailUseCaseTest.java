@@ -1,10 +1,16 @@
 package co.com.pragma.usecase.getuserbyemail;
 
 import co.com.pragma.model.common.exception.BusinessException;
+import co.com.pragma.model.role.Role;
+import co.com.pragma.model.role.gateways.RoleRepository;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -14,16 +20,25 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class GetUserByEmailUseCaseTest {
 
-    private User user;
+    @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private RoleRepository roleRepository;
+
+    @InjectMocks
     private GetUserByEmailUseCase getUserByEmailUseCase;
+
+    private User user;
+    private Role role;
+
 
     @BeforeEach
     void setUp() {
-        userRepository = mock(UserRepository.class);
-        getUserByEmailUseCase = new GetUserByEmailUseCase(userRepository);
+        role =Role.builder().id(1L).name("ADMIN").description("admin").build();
 
         user = User.builder()
                 .userId(UUID.randomUUID())
@@ -32,14 +47,15 @@ class GetUserByEmailUseCaseTest {
                 .birthDate(LocalDate.of(1994,1,30))
                 .email("mauricio@email.com")
                 .baseSalary(new BigDecimal(5000))
+                .role(role)
                 .build();
     }
 
     @Test
     void shouldReturnUserWhenEmailExists() {
 
-        when(userRepository.findByEmail("mauricio@email.com"))
-                .thenReturn(Mono.just(user));
+        when(userRepository.findByEmail("mauricio@email.com")).thenReturn(Mono.just(user));
+        when(roleRepository.findByName("ADMIN")).thenReturn(Mono.just(role));
 
         StepVerifier.create(getUserByEmailUseCase.getUserByEmail("mauricio@email.com"))
                 .expectNext(user)
@@ -50,8 +66,7 @@ class GetUserByEmailUseCaseTest {
 
     @Test
     void shouldReturnEmptyWhenEmailNotFound() {
-        when(userRepository.findByEmail("no@existe.com"))
-                .thenReturn(Mono.empty());
+        when(userRepository.findByEmail("no@existe.com")).thenReturn(Mono.empty());
 
         StepVerifier.create(getUserByEmailUseCase.getUserByEmail("no@existe.com"))
                 .expectErrorMatches(throwable ->
@@ -60,6 +75,5 @@ class GetUserByEmailUseCaseTest {
 
         verify(userRepository, times(1)).findByEmail("no@existe.com");
     }
-
 
 }

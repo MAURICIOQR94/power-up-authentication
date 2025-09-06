@@ -10,24 +10,25 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
-import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
 @RequiredArgsConstructor
 public non-sealed class UserRouterRest extends UserApiDoc {
 
+    private static final String USERS = "/usuarios";
+
     private final ApiProperties apiProperties;
 
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(UserHandler handler) {
+    public RouterFunction<ServerResponse> userRouterFunction(UserHandler handler) {
         return SpringdocRouteBuilder.route()
-                .GET(apiProperties.basePath(),
+                .GET(apiProperties.basePath().concat(USERS),
                         accept(MediaType.APPLICATION_JSON),
                         handler::getByEmail,
                         getByEmail())
                 .build()
                 .and(SpringdocRouteBuilder.route()
-                        .POST(apiProperties.basePath(),
+                        .POST(apiProperties.basePath().concat(USERS),
                                 accept(MediaType.APPLICATION_JSON),
                                 handler::save,
                                 save()
