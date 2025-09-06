@@ -2,6 +2,7 @@ package co.com.pragma.security.config;
 
 import co.com.pragma.common.exception.GeneralException;
 import co.com.pragma.security.JwtServerAuthenticationConverter;
+import co.com.pragma.security.service.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,11 +40,17 @@ public class SecurityConfig {
 
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/usuarios").hasAnyAuthority(ROLE_ADMIN, ROLE_ASESOR)
                         .anyExchange().authenticated()
                 )
                 .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                         .accessDeniedHandler((exchange, denied) ->
                                 Mono.error(new GeneralException(ACCESS_DENIED))
                         )

@@ -11,7 +11,7 @@ public enum BusinessExceptionMessage {
     EMAIL_ALREADY_EXISTS("BE002", "Email already exists"),
 
     INCORRECT_PASSWORD("BE003", "The password is incorrect"),
-    ROLE_NOT_FOUND("BE004", "User not found");
+    ROLE_NOT_FOUND("BE004", "Role not found");
 
     private final String code;
     private final String message;
