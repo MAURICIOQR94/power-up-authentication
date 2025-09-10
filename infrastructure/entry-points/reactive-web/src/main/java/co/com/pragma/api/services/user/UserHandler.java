@@ -2,7 +2,6 @@ package co.com.pragma.api.services.user;
 
 import co.com.pragma.api.dto.UserRequestDTO;
 import co.com.pragma.api.handlers.ValidatorHandler;
-import co.com.pragma.api.dto.ResponseDTO;
 import co.com.pragma.api.mapper.UserDTOMapper;
 import co.com.pragma.api.util.ParamsUtil;
 import co.com.pragma.common.exception.GeneralException;
@@ -39,7 +38,7 @@ public class UserHandler {
                         .doOnSuccess(u ->log.info("User successfully registered: {}", u.getEmail()))
                 )
                 .map(mapper::toDto)
-                .flatMap(ResponseDTO::success)
+                .flatMap(userResponse -> ServerResponse.ok().bodyValue(userResponse))
                 .as(transactionalOperator::transactional);
     }
 
@@ -48,7 +47,8 @@ public class UserHandler {
                 .doOnNext(email -> log.info("Processing get user by email request for: {}", email))
                 .flatMap(getUserByEmailUseCase::getUserByEmail)
                 .doOnSuccess(user -> log.info("User found for email: {}", user.getEmail()))
-                .flatMap(ResponseDTO::success);
+                .map(mapper::toDto)
+                .flatMap(userResponse -> ServerResponse.ok().bodyValue(userResponse));
     }
 
 }

@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -55,7 +54,7 @@ class RegisterUserUseCaseTest {
                 .birthDate(LocalDate.of(1994, 1, 30))
                 .email("mauricio@email.com")
                 .password(("Password12345"))
-                .baseSalary(new BigDecimal(5000))
+                .baseSalary(5000.0)
                 .role(role)
                 .build();
     }

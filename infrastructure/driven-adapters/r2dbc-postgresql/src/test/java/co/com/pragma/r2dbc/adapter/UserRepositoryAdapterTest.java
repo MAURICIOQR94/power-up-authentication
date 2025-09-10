@@ -13,7 +13,6 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +45,7 @@ class UserRepositoryAdapterTest {
                 .address("Cra 10 # 5 -55")
                 .phone("3113958043")
                 .email("mauroqr94@gmail.com")
-                .baseSalary(BigDecimal.valueOf(50000.0))
+                .baseSalary(50000.0)
                 .build();
 
         userEntity = UserEntity.builder()

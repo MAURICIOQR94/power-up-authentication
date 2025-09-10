@@ -22,7 +22,8 @@ public class GetUserByEmailUseCase {
                         .map(role -> {
                             user.setRole(role);
                             return user;
-                        }));
+                        })
+                );
     }
 
 

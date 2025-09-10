@@ -1,7 +1,6 @@
 package co.com.pragma.api.services.user;
 
-import co.com.pragma.api.dto.ErrorDTO;
-import co.com.pragma.api.dto.ResponseDTO;
+import co.com.pragma.api.dto.common.ErrorDTO;
 import co.com.pragma.api.dto.UserRequestDTO;
 import org.springdoc.core.fn.builders.operation.Builder;
 
@@ -18,11 +17,14 @@ import static org.springdoc.core.fn.builders.schema.Builder.schemaBuilder;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public sealed class UserApiDoc permits UserRouterRest {
+
     public static final String BUSINESS_ERROR = "Business Error";
     public static final String TECHNICAL_ERROR = "Technical Error";
     public static final String SUCCESS = "Success";
     public static final String ACCEPT_HEADER = "Accept Header";
     public static final String ACCEPT = "Accept";
+    public static final String USER_NOT_FOUND = "User not found";
+    public static final String ACCESS_DENIED = "Not Authenticated";
 
     protected Consumer<Builder> getByEmail() {
         return ops -> ops.tag("authentication")
@@ -33,14 +35,15 @@ public sealed class UserApiDoc permits UserRouterRest {
                 ))
                 .parameter(createQuery(String.class, "email", "email"))
                 .response(responseBuilder().responseCode("200").description(SUCCESS)
-                        .implementation(ResponseDTO.class)
                         .content(
                                 contentBuilder()
-                                        .schema(schemaBuilder().implementation(ResponseDTO.class))
+                                        .schema(schemaBuilder())
                                         .example(exampleResponse())
                         )
                 )
-                .response(responseBuilder().responseCode("409").description(BUSINESS_ERROR)
+                .response(responseBuilder().responseCode("401").description(ACCESS_DENIED)
+                        .implementation(ErrorDTO.class))
+                .response(responseBuilder().responseCode("404").description(USER_NOT_FOUND)
                         .implementation(ErrorDTO.class))
                 .response(responseBuilder().responseCode("500").description(TECHNICAL_ERROR)
                         .implementation(ErrorDTO.class));
@@ -55,13 +58,16 @@ public sealed class UserApiDoc permits UserRouterRest {
                 ))
                 .requestBody(requestBodyBuilder().implementation(UserRequestDTO.class))
                 .response(responseBuilder().responseCode("200").description(SUCCESS)
-                        .implementation(ResponseDTO.class)
                         .content(
                                 contentBuilder()
-                                        .schema(schemaBuilder().implementation(ResponseDTO.class))
+                                        .schema(schemaBuilder())
                                         .example(exampleResponse())
                         )
                 )
+                .response(responseBuilder().responseCode("401").description(ACCESS_DENIED)
+                        .implementation(ErrorDTO.class))
+                .response(responseBuilder().responseCode("404").description(USER_NOT_FOUND)
+                        .implementation(ErrorDTO.class))
                 .response(responseBuilder().responseCode("409").description(BUSINESS_ERROR)
                         .implementation(ErrorDTO.class))
                 .response(responseBuilder().responseCode("500").description(TECHNICAL_ERROR)
@@ -85,13 +91,9 @@ public sealed class UserApiDoc permits UserRouterRest {
     private org.springdoc.core.fn.builders.exampleobject.Builder exampleResponse() {
         return exampleOjectBuilder().value("""
                 {
-                    "data": {
-                        "idUser": 1,
-                        "firstname": "Mauricio",
-                        "lastname": "Quintero",
-                        "birthDate":30-01-94,
-                        "email": "mauroqr94@gmail.com"
-                    }
+                    "email": "admin1@gmail.com",
+                    "firstName": "Arturo",
+                    "lastName": "Sanchez"
                 }
                 """);
     }

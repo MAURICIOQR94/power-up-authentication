@@ -73,7 +73,8 @@ class ReactiveAdapterOperationsTest {
             super(repo, toData, toEntity);
         }
         Mono<TestUser> findByEmail(String email) {
-            return repository.findByEmail(email).map(this::toEntity);
+            return repository.findByEmail(email)
+                    .map(this::toEntity);
         }
     }
 }

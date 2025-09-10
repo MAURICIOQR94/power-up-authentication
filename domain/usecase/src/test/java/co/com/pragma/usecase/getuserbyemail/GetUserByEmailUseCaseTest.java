@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -46,7 +45,7 @@ class GetUserByEmailUseCaseTest {
                 .lastName("Quintero")
                 .birthDate(LocalDate.of(1994,1,30))
                 .email("mauricio@email.com")
-                .baseSalary(new BigDecimal(5000))
+                .baseSalary(5000.0)
                 .role(role)
                 .build();
     }
@@ -55,7 +54,7 @@ class GetUserByEmailUseCaseTest {
     void shouldReturnUserWhenEmailExists() {
 
         when(userRepository.findByEmail("mauricio@email.com")).thenReturn(Mono.just(user));
-        when(roleRepository.findByName("ADMIN")).thenReturn(Mono.just(role));
+        when(roleRepository.findById(1L)).thenReturn(Mono.just(role));
 
         StepVerifier.create(getUserByEmailUseCase.getUserByEmail("mauricio@email.com"))
                 .expectNext(user)

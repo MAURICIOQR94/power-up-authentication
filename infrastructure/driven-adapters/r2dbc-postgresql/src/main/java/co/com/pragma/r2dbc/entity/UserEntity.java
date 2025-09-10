@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -44,7 +43,7 @@ public class UserEntity {
     private String documentNumber;
 
     @Column("base_salary")
-    private BigDecimal baseSalary;
+    private Double baseSalary;
 
     @Column("id_role")
     private Long idRole;
