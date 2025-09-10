@@ -1,7 +1,7 @@
 package co.com.pragma.api.handlers;
 
-import co.com.pragma.api.dto.ErrorDTO;
-import co.com.pragma.api.dto.ResponseDTO;
+import co.com.pragma.api.dto.common.ErrorDTO;
+import co.com.pragma.api.dto.common.ResponseDTO;
 import co.com.pragma.common.exception.GeneralException;
 import co.com.pragma.common.exception.TechnicalException;
 import co.com.pragma.model.common.exception.BusinessException;

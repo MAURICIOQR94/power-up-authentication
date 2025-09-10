@@ -1,4 +1,4 @@
-package co.com.pragma.api.dto;
+package co.com.pragma.api.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;

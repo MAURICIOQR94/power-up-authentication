@@ -1,6 +1,7 @@
 package co.com.pragma.api.services.login;
 
 import co.com.pragma.api.dto.*;
+import co.com.pragma.api.dto.common.ErrorDTO;
 import org.springdoc.core.fn.builders.operation.Builder;
 
 import java.util.function.Consumer;
@@ -17,9 +18,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class LoginApiDoc {
 
-    public static final String UNAUTHORIZED = "Unauthorized";
+    public static final String ACCESS_DENIED = "Not Authenticated";
     public static final String FORBIDDEN = "Forbidden";
-    public static final String BUSINESS_ERROR = "Business Error";
+    public static final String USER_NOT_FOUND = "User not found";
     public static final String TECHNICAL_ERROR = "Technical Error";
     public static final String SUCCESS = "Success";
     public static final String ACCEPT_HEADER = "Accept Header";
@@ -34,18 +35,17 @@ public class LoginApiDoc {
                 ))
                 .requestBody(requestBodyBuilder().implementation(LoginRequestDTO.class))
                 .response(responseBuilder().responseCode("200").description(SUCCESS)
-                        .implementation(ResponseDTO.class)
                         .content(
                                 contentBuilder()
                                         .schema(schemaBuilder().implementation(LoginResponseDTO.class))
                                         .example(exampleResponse())
                         )
                 )
-                .response(responseBuilder().responseCode("401").description(UNAUTHORIZED)
+                .response(responseBuilder().responseCode("401").description(ACCESS_DENIED)
                         .implementation(ErrorDTO.class))
                 .response(responseBuilder().responseCode("403").description(FORBIDDEN)
                         .implementation(ErrorDTO.class))
-                .response(responseBuilder().responseCode("409").description(BUSINESS_ERROR)
+                .response(responseBuilder().responseCode("404").description(USER_NOT_FOUND)
                         .implementation(ErrorDTO.class))
                 .response(responseBuilder().responseCode("500").description(TECHNICAL_ERROR)
                         .implementation(ErrorDTO.class));

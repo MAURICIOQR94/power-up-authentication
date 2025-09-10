@@ -4,7 +4,6 @@ import co.com.pragma.model.role.Role;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ public class User {
     private String password;
     private String documentNumber;
     private LocalDate birthDate;
-    private BigDecimal baseSalary;
+    private Double baseSalary;
     private Role role;
 
 }

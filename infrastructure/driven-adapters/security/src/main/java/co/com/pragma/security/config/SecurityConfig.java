@@ -47,6 +47,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/usuarios").hasAnyAuthority(ROLE_ADMIN, ROLE_ASESOR)
+                        .pathMatchers(HttpMethod.GET, "/api/v1/usuarios").hasAnyAuthority(ROLE_ADMIN, ROLE_ASESOR)
                         .anyExchange().authenticated()
                 )
                 .exceptionHandling(exceptions -> exceptions

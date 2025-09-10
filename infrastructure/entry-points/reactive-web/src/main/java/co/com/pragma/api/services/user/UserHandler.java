@@ -1,8 +1,9 @@
 package co.com.pragma.api.services.user;
 
+import co.com.pragma.api.config.ApiProperties;
 import co.com.pragma.api.dto.UserRequestDTO;
+import co.com.pragma.api.dto.common.ResponseDTO;
 import co.com.pragma.api.handlers.ValidatorHandler;
-import co.com.pragma.api.dto.ResponseDTO;
 import co.com.pragma.api.mapper.UserDTOMapper;
 import co.com.pragma.api.util.ParamsUtil;
 import co.com.pragma.common.exception.GeneralException;
@@ -16,6 +17,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+
 import static co.com.pragma.common.enums.GeneralExceptionMessage.INVALID_BODY_PARAMETER;
 
 @Log4j2
@@ -28,6 +31,7 @@ public class UserHandler {
     private final TransactionalOperator transactionalOperator;
     private final ValidatorHandler validatorHandler;
     private final UserDTOMapper mapper;
+    private final ApiProperties apiProperties;
 
     public Mono<ServerResponse> save(ServerRequest serverRequest) {
         log.info("Processing user registration request");
@@ -36,10 +40,16 @@ public class UserHandler {
                 .doOnNext(validatorHandler::validateObject)
                 .map(mapper::toEntity)
                 .flatMap(user -> registerUserUseCase.execute(user)
-                        .doOnSuccess(u ->log.info("User successfully registered: {}", u.getEmail()))
+                        .doOnSuccess(u -> log.info("User successfully registered: {}", u.getEmail()))
                 )
                 .map(mapper::toDto)
-                .flatMap(ResponseDTO::success)
+                .flatMap(userResponse -> ServerResponse.created(
+                                URI.create(apiProperties.basePath().concat(String.format("/%s", userResponse.getEmail()))))
+                        .bodyValue(ResponseDTO.builder()
+                                .message("User created successfully")
+                                .data(userResponse)
+                                .build()
+                        ))
                 .as(transactionalOperator::transactional);
     }
 
@@ -48,7 +58,8 @@ public class UserHandler {
                 .doOnNext(email -> log.info("Processing get user by email request for: {}", email))
                 .flatMap(getUserByEmailUseCase::getUserByEmail)
                 .doOnSuccess(user -> log.info("User found for email: {}", user.getEmail()))
-                .flatMap(ResponseDTO::success);
+                .map(mapper::toDto)
+                .flatMap(userResponse -> ServerResponse.ok().bodyValue(userResponse));
     }
 
 }

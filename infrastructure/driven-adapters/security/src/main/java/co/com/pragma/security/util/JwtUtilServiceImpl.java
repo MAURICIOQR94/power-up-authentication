@@ -19,6 +19,7 @@ import java.util.UUID;
 public class JwtUtilServiceImpl implements JwtUtilService {
 
     private static final String DOCUMENT_NUMBER = "documentNumber";
+    private static final String EMAIL = "email";
     private static final String ROLE = "role";
 
     @Value("${jwt.secret}")
@@ -41,6 +42,7 @@ public class JwtUtilServiceImpl implements JwtUtilService {
         return Jwts.builder()
                 .setSubject(user.getUserId().toString())
                 .claim(ROLE, user.getRole().getName())
+                .claim(EMAIL, user.getEmail())
                 .claim(DOCUMENT_NUMBER, user.getDocumentNumber())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + expirationMillis))
