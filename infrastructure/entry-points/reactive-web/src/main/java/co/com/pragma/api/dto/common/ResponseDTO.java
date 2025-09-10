@@ -13,6 +13,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Builder(toBuilder = true)
 public final class ResponseDTO <T> {
 
+    private final String message;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final MetaDTO.Meta meta;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

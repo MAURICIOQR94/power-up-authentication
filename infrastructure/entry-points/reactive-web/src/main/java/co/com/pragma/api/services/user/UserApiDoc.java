@@ -23,6 +23,7 @@ public sealed class UserApiDoc permits UserRouterRest {
     public static final String SUCCESS = "Success";
     public static final String ACCEPT_HEADER = "Accept Header";
     public static final String ACCEPT = "Accept";
+    public static final String CREATED = "Created";
     public static final String USER_NOT_FOUND = "User not found";
     public static final String ACCESS_DENIED = "Not Authenticated";
 
@@ -38,7 +39,7 @@ public sealed class UserApiDoc permits UserRouterRest {
                         .content(
                                 contentBuilder()
                                         .schema(schemaBuilder())
-                                        .example(exampleResponse())
+                                        .example(exampleFindResponse())
                         )
                 )
                 .response(responseBuilder().responseCode("401").description(ACCESS_DENIED)
@@ -57,11 +58,11 @@ public sealed class UserApiDoc permits UserRouterRest {
                         String.class, ACCEPT, ACCEPT_HEADER, APPLICATION_JSON_VALUE
                 ))
                 .requestBody(requestBodyBuilder().implementation(UserRequestDTO.class))
-                .response(responseBuilder().responseCode("200").description(SUCCESS)
+                .response(responseBuilder().responseCode("201").description(CREATED)
                         .content(
                                 contentBuilder()
                                         .schema(schemaBuilder())
-                                        .example(exampleResponse())
+                                        .example(exampleSaveResponse())
                         )
                 )
                 .response(responseBuilder().responseCode("401").description(ACCESS_DENIED)
@@ -88,12 +89,25 @@ public sealed class UserApiDoc permits UserRouterRest {
         return parameterBuilder().in(QUERY).implementation(clazz).required(true).name(name).description(description);
     }
 
-    private org.springdoc.core.fn.builders.exampleobject.Builder exampleResponse() {
+    private org.springdoc.core.fn.builders.exampleobject.Builder exampleSaveResponse() {
+        return exampleOjectBuilder().value("""
+                {
+                    "message": "User created successfully",
+                    "data": {
+                        "email": "admin1@gmail.com",
+                        "firstName": "Mauricio",
+                        "lastName": "Quintero"
+                    }
+                }
+                """);
+    }
+
+    private org.springdoc.core.fn.builders.exampleobject.Builder exampleFindResponse() {
         return exampleOjectBuilder().value("""
                 {
                     "email": "admin1@gmail.com",
-                    "firstName": "Arturo",
-                    "lastName": "Sanchez"
+                    "firstName": "Mauricio",
+                    "lastName": "Quintero"
                 }
                 """);
     }
