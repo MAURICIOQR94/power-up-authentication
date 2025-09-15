@@ -24,6 +24,7 @@ public class SecurityConfig {
 
     private static final String ROLE_ADMIN = "ADMIN";
     private static final String ROLE_ASESOR = "ASESOR";
+    private static final String ROLE_SERVICE = "SERVICE";
 
     private final ReactiveAuthenticationManager authenticationManager;
     private final JwtServerAuthenticationConverter authenticationConverter;
@@ -47,7 +48,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/usuarios").hasAnyAuthority(ROLE_ADMIN, ROLE_ASESOR)
-                        .pathMatchers(HttpMethod.GET, "/api/v1/usuarios").hasAnyAuthority(ROLE_ADMIN, ROLE_ASESOR)
+                        .pathMatchers(HttpMethod.GET, "/api/v1/usuarios").hasAnyAuthority(ROLE_ADMIN, ROLE_ASESOR, ROLE_SERVICE)
                         .anyExchange().authenticated()
                 )
                 .exceptionHandling(exceptions -> exceptions

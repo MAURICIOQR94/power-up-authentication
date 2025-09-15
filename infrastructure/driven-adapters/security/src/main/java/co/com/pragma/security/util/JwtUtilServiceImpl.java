@@ -18,7 +18,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtUtilServiceImpl implements JwtUtilService {
 
-    private static final String DOCUMENT_NUMBER = "documentNumber";
     private static final String EMAIL = "email";
     private static final String ROLE = "role";
 
@@ -43,7 +42,6 @@ public class JwtUtilServiceImpl implements JwtUtilService {
                 .setSubject(user.getUserId().toString())
                 .claim(ROLE, user.getRole().getName())
                 .claim(EMAIL, user.getEmail())
-                .claim(DOCUMENT_NUMBER, user.getDocumentNumber())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + expirationMillis))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -63,11 +61,6 @@ public class JwtUtilServiceImpl implements JwtUtilService {
     @Override
     public UUID extractUserId(String token) {
         return UUID.fromString(getClaims(token).getSubject());
-    }
-
-    @Override
-    public String extractDocumentNumber(String token) {
-        return getClaims(token).get(DOCUMENT_NUMBER, String.class);
     }
 
     @Override
