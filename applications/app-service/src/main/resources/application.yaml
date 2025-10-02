@@ -10,7 +10,7 @@ spring:
       enabled: true
       path: "/h2"
   profiles:
-    include: null
+    active: docker
 management:
   endpoints:
     web:
@@ -26,7 +26,7 @@ cors:
 adapters:
   postgres:
     database: ${DATABASE_AUTH}
-    host: "localhost"
+    host: ${DB_HOST}
     port: 5432
     username: ${USERNAME_AUTH}
     password: ${PASSWORD_AUTH}
